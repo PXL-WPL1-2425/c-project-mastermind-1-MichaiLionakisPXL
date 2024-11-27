@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace WpfApp1
 {
@@ -21,200 +23,139 @@ namespace WpfApp1
 
         Random rnd = new Random();
         string[] colors = { "rood", "geel", "oranje", "blauw", "wit", "groen" };
-        List<string> tittleCheck = new List<string>();
-
+        string[] tittleCheck = new string[4];
+        private DispatcherTimer timer = new DispatcherTimer();
+        int timerTick = 0;
+        int attempt = 0;
 
         public MainWindow()
         {
             InitializeComponent();
+            timer.Tick += Timer_Tick;
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
+
             for (int i = 0; i < 4; i++)
             {
-                tittleCheck.Add(colors[rnd.Next(0, 6)]);
+                tittleCheck[i] += colors[rnd.Next(0, 6)];
             }
-            string combinedString = string.Join(",", tittleCheck.ToArray());
-            this.Title = combinedString;
+            string combinedString = string.Join(",", tittleCheck);
+            codeBlock.Text = combinedString;
+
+            this.KeyDown += toggleDebug;
         }
 
+        private void addAtempt()
+        {
+            attempt++;
+            this.Title = attempt.ToString();
+        }
+
+        private void toggleDebug(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.F12)
+            {
+                codeBlock.Visibility = Visibility.Visible;
+            }
+        }
+        
         private void codeCheck_Click(object sender, RoutedEventArgs e)
         {
-            
-            ComboBoxItem selectedItem1 = comboBox1.SelectedItem as ComboBoxItem;
-            string selectedColor1 = selectedItem1?.Content.ToString().Trim();
+            addAtempt();
+            StopCountDown();
+            StartCountDown();
 
-            ComboBoxItem selectedItem2 = comboBox2.SelectedItem as ComboBoxItem;
-            string selectedColor2 = selectedItem2?.Content.ToString().Trim();
+            ComboBox[] comboBoxes = { comboBox1, comboBox2, comboBox3, comboBox4 };
+            Label[] colorLabels = { colorLabel1, colorLabel2, colorLabel3, colorLabel4 };
 
-            
-            ComboBoxItem selectedItem3 = comboBox3.SelectedItem as ComboBoxItem;
-            string selectedColor3 = selectedItem3?.Content.ToString().Trim();
+            for (int i = 0; i < comboBoxes.Length; i++)
+            {
+                ComboBox comboBox = comboBoxes[i];
+                Label colorLabel = colorLabels[i];
 
-            ComboBoxItem selectedItem4 = comboBox4.SelectedItem as ComboBoxItem;
-            string selectedColor4 = selectedItem4?.Content.ToString().Trim();
+                ComboBoxItem selectedItem = comboBox.SelectedItem as ComboBoxItem;
+                
 
-            
-            if (selectedColor1 == tittleCheck[0])
-            {
-                colorLabel1.BorderBrush = new SolidColorBrush(Colors.Green);
-                colorLabel1.BorderThickness = new Thickness(3);
-            }
-            else
-            {
-                colorLabel1.BorderBrush = new SolidColorBrush(Colors.Red);
-                colorLabel1.BorderThickness = new Thickness(3);
-            }
-
-            if (selectedColor2 == tittleCheck[1])
-            {
-                colorLabel2.BorderBrush = new SolidColorBrush(Colors.Green);
-                colorLabel2.BorderThickness = new Thickness(3);
-            }
-            else
-            {
-                colorLabel2.BorderBrush = new SolidColorBrush(Colors.Red);
-                colorLabel2.BorderThickness = new Thickness(3);
-            }
-
-            if (selectedColor3 == tittleCheck[2])
-            {
-                colorLabel3.BorderBrush = new SolidColorBrush(Colors.Green);
-                colorLabel3.BorderThickness = new Thickness(3);
-            }
-            else
-            {
-                colorLabel3.BorderBrush = new SolidColorBrush(Colors.Red);
-                colorLabel3.BorderThickness = new Thickness(3);
-            }
-
-            if (selectedColor4 == tittleCheck[3])
-            {
-                colorLabel4.BorderBrush = new SolidColorBrush(Colors.Green);
-                colorLabel4.BorderThickness = new Thickness(3);
-            }
-            else
-            {
-                colorLabel4.BorderBrush = new SolidColorBrush(Colors.Red);
-                colorLabel4.BorderThickness = new Thickness(3);
-            }
-        }
-
-        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox box = (ComboBox)sender;          
-                ComboBoxItem item = box.SelectedItem as ComboBoxItem;
-                switch (item.Content.ToString().Trim())
+                if (selectedItem != null)
                 {
-                    case "wit":
-                        colorLabel1.Background = new SolidColorBrush(Colors.White);
-                        break;
-                    case "groen":
-                        colorLabel1.Background = new SolidColorBrush(Colors.Green);
-                        break;
-                    case "blauw":
-                        colorLabel1.Background = new SolidColorBrush(Colors.Blue);
-                        break;
-                    case "rood":
-                        colorLabel1.Background = new SolidColorBrush(Colors.Red);
-                        break;
-                    case "geel":
-                        colorLabel1.Background = new SolidColorBrush(Colors.Yellow);
-                        break;
-                    case "oranje":
-                        colorLabel1.Background = new SolidColorBrush(Colors.Orange);
-                        break;
-                    default:
-
-                        break;
+                    string selectedColor = selectedItem.Content.ToString().Trim();
+                    if (selectedColor == tittleCheck[i])
+                    {
+                        colorLabel.BorderBrush = new SolidColorBrush(Colors.Wheat);
+                        colorLabel.BorderThickness = new Thickness(3);
+                    }
+                    else
+                    {
+                        colorLabel.BorderBrush = new SolidColorBrush(Colors.Red);
+                        colorLabel.BorderThickness = new Thickness(3);
+                    }
                 }
-            
-        }
-
-        private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox box = (ComboBox)sender;
-            ComboBoxItem item = box.SelectedItem as ComboBoxItem;
-            switch (item.Content.ToString().Trim())
-            {
-                case "wit":
-                    colorLabel2.Background = new SolidColorBrush(Colors.White);
-                    break;
-                case "groen":
-                    colorLabel2.Background = new SolidColorBrush(Colors.Green);
-                    break;
-                case "blauw":
-                    colorLabel2.Background = new SolidColorBrush(Colors.Blue);
-                    break;
-                case "rood":
-                    colorLabel2.Background = new SolidColorBrush(Colors.Red);
-                    break;
-                case "geel":
-                    colorLabel2.Background = new SolidColorBrush(Colors.Yellow);
-                    break;
-                case "oranje":
-                    colorLabel2.Background = new SolidColorBrush(Colors.Orange);
-                    break;
-                default:
-
-                    break;
             }
         }
 
-        private void comboBox3_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            ComboBox box = (ComboBox)sender;
-            ComboBoxItem item = box.SelectedItem as ComboBoxItem;
-            switch (item.Content.ToString().Trim())
-            {
-                case "wit":
-                    colorLabel3.Background = new SolidColorBrush(Colors.White);
-                    break;
-                case "groen":
-                    colorLabel3.Background = new SolidColorBrush(Colors.Green);
-                    break;
-                case "blauw":
-                    colorLabel3.Background = new SolidColorBrush(Colors.Blue);
-                    break;
-                case "rood":
-                    colorLabel3.Background = new SolidColorBrush(Colors.Red);
-                    break;
-                case "geel":
-                    colorLabel3.Background = new SolidColorBrush(Colors.Yellow);
-                    break;
-                case "oranje":
-                    colorLabel3.Background = new SolidColorBrush(Colors.Orange);
-                    break;
-                default:
+            timerTick++;
+            timerBlock.Text = timerTick.ToString();
 
-                    break;
+
+            if (timerTick == 10)
+            {
+                attempt++;
+                StopCountDown();
             }
         }
-
-        private void comboBox4_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void StartCountDown()
         {
-            ComboBox box = (ComboBox)sender;
-            ComboBoxItem item = box.SelectedItem as ComboBoxItem;
-            switch (item.Content.ToString().Trim())
-            {
-                case "wit":
-                    colorLabel4.Background = new SolidColorBrush(Colors.White);
-                    break;
-                case "groen":
-                    colorLabel4.Background = new SolidColorBrush(Colors.Green);
-                    break;
-                case "blauw":
-                    colorLabel4.Background = new SolidColorBrush(Colors.Blue);
-                    break;
-                case "rood":
-                    colorLabel4.Background = new SolidColorBrush(Colors.Red);
-                    break;
-                case "geel":
-                    colorLabel4.Background = new SolidColorBrush(Colors.Yellow);
-                    break;
-                case "oranje":
-                    colorLabel4.Background = new SolidColorBrush(Colors.Orange);
-                    break;
-                default:
+            timerTick = 0;
+            timer.Start();
+        }
+        private void StopCountDown()
+        {
+            timer.Stop();
+            timerTick = 0;            
+            this.Title = attempt.ToString();
+        }
 
-                    break;
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) 
+        {
+            ComboBox[] comboBoxes = { comboBox1, comboBox2, comboBox3, comboBox4 };
+            Label[] colorLabels = { colorLabel1, colorLabel2, colorLabel3, colorLabel4 };
+            for (int i = 0; i < comboBoxes.Length; i++)
+            {
+                ComboBox comboBox = comboBoxes[i];
+                Label colorLabel = colorLabels[i];
+
+                ComboBoxItem item = comboBox.SelectedItem as ComboBoxItem;
+                if (item != null)  
+                {
+                    string selectedColor = item.Content.ToString().Trim();
+
+                    switch (selectedColor)
+                    {
+                        case "wit":
+                            colorLabel.Background = new SolidColorBrush(Colors.White);
+                            break;
+                        case "groen":
+                            colorLabel.Background = new SolidColorBrush(Colors.Green);
+                            break;
+                        case "blauw":
+                            colorLabel.Background = new SolidColorBrush(Colors.Blue);
+                            break;
+                        case "rood":
+                            colorLabel.Background = new SolidColorBrush(Colors.Red);
+                            break;
+                        case "geel":
+                            colorLabel.Background = new SolidColorBrush(Colors.Yellow);
+                            break;
+                        case "oranje":
+                            colorLabel.Background = new SolidColorBrush(Colors.Orange);
+                            break;
+                        default:
+                            colorLabel.Background = null;  
+                            break;
+                    }
+                }
             }
         }
     }

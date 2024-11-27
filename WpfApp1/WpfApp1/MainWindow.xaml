@@ -16,7 +16,7 @@
         <Label x:Name="colorLabel2" Content="" HorizontalAlignment="Left" Margin="78,30,0,0" VerticalAlignment="Top" Height="118" Width="145" IsEnabled="False" Grid.Column="2"/>
         <Label x:Name="colorLabel3" Content="" HorizontalAlignment="Left" Margin="278,30,0,0" VerticalAlignment="Top" Height="118" Width="145" IsEnabled="False" Grid.Column="2"/>
         <Label x:Name="colorLabel4" Content="" HorizontalAlignment="Left" Margin="478,30,0,0" VerticalAlignment="Top" Height="118" Width="145" IsEnabled="False" Grid.Column="2"/>
-        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="40,3,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="3" Text="Kleur 1" SelectionChanged="comboBox1_SelectionChanged">
+        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="40,3,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="3" Text="Kleur 1" SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="rood"/>
             <ComboBoxItem Content="groen"/>
             <ComboBoxItem Content="geel"/>
@@ -24,7 +24,7 @@
             <ComboBoxItem Content="oranje"/>
             <ComboBoxItem Content="wit"/>
         </ComboBox>
-        <ComboBox x:Name="comboBox2" HorizontalAlignment="Left" Margin="90,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox2_SelectionChanged">
+        <ComboBox x:Name="comboBox2" HorizontalAlignment="Left" Margin="90,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="rood"/>
             <ComboBoxItem Content="groen"/>
             <ComboBoxItem Content="geel"/>
@@ -32,7 +32,7 @@
             <ComboBoxItem Content="oranje"/>
             <ComboBoxItem Content="wit"/>
         </ComboBox>
-        <ComboBox x:Name="comboBox3" HorizontalAlignment="Left" Margin="290,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox3_SelectionChanged">
+        <ComboBox x:Name="comboBox3" HorizontalAlignment="Left" Margin="290,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="rood"/>
             <ComboBoxItem Content="groen"/>
             <ComboBoxItem Content="geel"/>
@@ -40,7 +40,7 @@
             <ComboBoxItem Content="oranje"/>
             <ComboBoxItem Content="wit"/>
         </ComboBox>
-        <ComboBox x:Name="comboBox4" HorizontalAlignment="Left" Margin="490,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox4_SelectionChanged">
+        <ComboBox x:Name="comboBox4" HorizontalAlignment="Left" Margin="490,3,0,0" VerticalAlignment="Top" Width="120" Text="Kleur 1" Grid.Column="2" SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="rood"/>
             <ComboBoxItem Content="groen"/>
             <ComboBoxItem Content="geel"/>
@@ -49,6 +49,8 @@
             <ComboBoxItem Content="wit"/>
         </ComboBox>
         <Button x:Name="codeCheck" Grid.Column="2" Content="Check code" HorizontalAlignment="Left" Height="49" Margin="186,271,0,0" VerticalAlignment="Top" Width="128" Click="codeCheck_Click"/>
+        <TextBlock x:Name="codeBlock" HorizontalAlignment="Left" Margin="150,325,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" Grid.Column="2" IsEnabled="False" Visibility="Collapsed" TextAlignment="Center"/>
+        <TextBlock x:Name="timerBlock" Grid.Column="2" HorizontalAlignment="Left" Margin="186,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" TextAlignment="Center" Text="0"/>
 
     </Grid>
 </Window>
