@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MasterMind" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="71*"/>
@@ -50,7 +50,10 @@
         </ComboBox>
         <Button x:Name="codeCheck" Grid.Column="2" Content="Check code" HorizontalAlignment="Left" Height="49" Margin="186,271,0,0" VerticalAlignment="Top" Width="128" Click="codeCheck_Click"/>
         <TextBlock x:Name="codeBlock" HorizontalAlignment="Left" Margin="150,325,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" Grid.Column="2" IsEnabled="False" Visibility="Collapsed" TextAlignment="Center"/>
-        <TextBlock x:Name="timerBlock" Grid.Column="2" HorizontalAlignment="Left" Margin="186,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" TextAlignment="Center" Text="0"/>
+        <TextBlock x:Name="timerBlock" Grid.Column="2" HorizontalAlignment="Left" Margin="186,325,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" TextAlignment="Center" Text="0"/>
+        <ListBox x:Name="historyList" Grid.Column="2"  Margin="50,166,200,187" Width="400"/>
+        <Label Grid.Column="2" Content="StrafPunten: " HorizontalAlignment="Right" Margin="0,376,361,0" VerticalAlignment="Top"/>
+        <Label x:Name="guessLabel" Grid.Column="2" Content="Pogingen: " HorizontalAlignment="Left" Margin="217,350,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

@@ -20,13 +20,14 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        string combinedString;
         Random rnd = new Random();
         string[] colors = { "rood", "geel", "oranje", "blauw", "wit", "groen" };
         string[] tittleCheck = new string[4];
         private DispatcherTimer timer = new DispatcherTimer();
         int timerTick = 0;
         int attempt = 0;
+        int correctGuess = 0;
 
         public MainWindow()
         {
@@ -39,16 +40,32 @@ namespace WpfApp1
             {
                 tittleCheck[i] += colors[rnd.Next(0, 6)];
             }
-            string combinedString = string.Join(",", tittleCheck);
+            combinedString = string.Join(",", tittleCheck);
             codeBlock.Text = combinedString;
 
             this.KeyDown += toggleDebug;
         }
 
-        private void addAtempt()
+        private void addAttempt(StackPanel newStackPanel)
         {
-            attempt++;
-            this.Title = attempt.ToString();
+            if (attempt < 10)
+            {
+                attempt++;
+                guessLabel.Content = $"pogingen: {attempt.ToString()}";
+            }
+            else if (attempt >= 10) 
+            {
+                MessageBoxResult result = MessageBox.Show($"you failed the correct code was {combinedString},\rNog eens proberen?","FAILED",MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    attempt = 0;
+                    historyList.Items.Clear();
+                }
+                else 
+                { 
+                    this.Close();
+                }
+            }
         }
 
         private void toggleDebug(object sender, KeyEventArgs e)
@@ -61,36 +78,52 @@ namespace WpfApp1
         
         private void codeCheck_Click(object sender, RoutedEventArgs e)
         {
-            addAtempt();
+            
             StopCountDown();
             StartCountDown();
 
             ComboBox[] comboBoxes = { comboBox1, comboBox2, comboBox3, comboBox4 };
-            Label[] colorLabels = { colorLabel1, colorLabel2, colorLabel3, colorLabel4 };
+            Label[] colorLabels = { colorLabel1, colorLabel2, colorLabel3, colorLabel4 };            
+            StackPanel newStackPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal                
+            };
+            addAttempt(newStackPanel);
 
             for (int i = 0; i < comboBoxes.Length; i++)
             {
                 ComboBox comboBox = comboBoxes[i];
                 Label colorLabel = colorLabels[i];
-
                 ComboBoxItem selectedItem = comboBox.SelectedItem as ComboBoxItem;
-                
 
                 if (selectedItem != null)
                 {
-                    string selectedColor = selectedItem.Content.ToString().Trim();
+                    string selectedColor = selectedItem.Content.ToString().Trim();                    
                     if (selectedColor == tittleCheck[i])
                     {
                         colorLabel.BorderBrush = new SolidColorBrush(Colors.Wheat);
                         colorLabel.BorderThickness = new Thickness(3);
+                        correctGuess += 1;
+
                     }
                     else
                     {
                         colorLabel.BorderBrush = new SolidColorBrush(Colors.Red);
                         colorLabel.BorderThickness = new Thickness(3);
-                    }
+                    }                    
+                    Label newLabel = new Label
+                    {
+                        Background = colorLabel.Background, 
+                        BorderBrush = colorLabel.BorderBrush,
+                        Width = 95,
+                        Height = 10,                        
+                        HorizontalContentAlignment = HorizontalAlignment.Center,
+                        VerticalContentAlignment = VerticalAlignment.Center
+                    };
+                    newStackPanel.Children.Add(newLabel);
                 }
-            }
+            }            
+            historyList.Items.Add(newStackPanel);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -103,6 +136,7 @@ namespace WpfApp1
             {
                 attempt++;
                 StopCountDown();
+                StartCountDown();
             }
         }
         private void StartCountDown()
@@ -113,10 +147,10 @@ namespace WpfApp1
         private void StopCountDown()
         {
             timer.Stop();
-            timerTick = 0;            
-            this.Title = attempt.ToString();
+            timerTick = 0;
+            guessLabel.Content = $"pogingen: {attempt.ToString()}";
         }
-
+        
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) 
         {
             ComboBox[] comboBoxes = { comboBox1, comboBox2, comboBox3, comboBox4 };
